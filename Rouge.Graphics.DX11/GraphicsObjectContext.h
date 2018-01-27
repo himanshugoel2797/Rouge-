@@ -7,6 +7,7 @@
 #include "RTV.h"
 #include "Texture2D.h"
 #include "Vector\Vector4.h"
+#include "ShaderObject.h"
 
 #include <memory>
 
@@ -27,6 +28,10 @@ namespace RougePP::Graphics {
 		GRAPH_DllVisible RTV* CreateRTV(Texture2D *tex);
 		GRAPH_DllVisible void ClearRTV(RTV *rtv, RougePP::Math::Vector4 col);
 
+		GRAPH_DllVisible ShaderObject* CreateShader(std::wstring filename, ShaderObject::ShaderType sType, std::string fname);
+		GRAPH_DllVisible void SetShader(ShaderObject *sObj);
+
 		GRAPH_DllVisible void SetRenderTargets(int num, RTV **rtvs);
+		GRAPH_DllVisible void SetViewports(int num, RougePP::Math::Vector4 *vp);
 	};
 }

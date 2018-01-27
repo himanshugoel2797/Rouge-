@@ -47,6 +47,7 @@ int Context::InitCtxt(HWND hWnd)
 	scd.OutputWindow = hWnd;
 	scd.SampleDesc.Count = 4;	//TODO: MSAA
 	scd.Windowed = !this->d_ptr->isFullscreen;
+	scd.Flags = DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH;
 
 	D3D_FEATURE_LEVEL featureLevels[] = { D3D_FEATURE_LEVEL_11_1 };
 	D3D_FEATURE_LEVEL selFeatureLevel;
