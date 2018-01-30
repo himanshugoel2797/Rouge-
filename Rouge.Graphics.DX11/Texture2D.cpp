@@ -19,7 +19,6 @@ Texture2D::Texture2D() : d_ptr(new Texture2DState())
 {
 }
 
-
 Texture2D::~Texture2D()
 {
 	d_ptr->tex->Release();

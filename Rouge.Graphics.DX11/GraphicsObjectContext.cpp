@@ -1,12 +1,15 @@
 #include "stdafx.h"
 #include "GraphicsObjectContext.h"
+
 #include "State\GraphicsObjectContextState.h"
 
 #include "State\ContextState.h"
 #include "State\DeferredContextState.h"
 #include "State\RTVState.h"
 #include "State\Texture2DState.h"
+#include "State\BufferState.h"
 #include "State\ShaderObjectState.h"
+#include "State\BufferLayoutState.h"
 
 #include <d3d11.h>
 #include <D3DCompiler.h>
@@ -101,9 +104,76 @@ GRAPH_DllVisible ShaderObject * RougePP::Graphics::GraphicsObjectContext::Create
 		break;
 	}
 
-	blob->Release();
+	obj->d_ptr->blob = blob;
 
 	return obj;
+}
+
+void GraphicsObjectContext::SetShader(ShaderObject *sObj) {
+	switch (sObj->d_ptr->sType) {
+	case ShaderObject::ShaderType::Vertex:
+		d_ptr->devCtxt->VSSetShader(sObj->d_ptr->vs, NULL, 0);
+		break;
+	case ShaderObject::ShaderType::Fragment:
+		d_ptr->devCtxt->PSSetShader(sObj->d_ptr->ps, NULL, 0);
+		break;
+	case ShaderObject::ShaderType::Domain:
+		d_ptr->devCtxt->DSSetShader(sObj->d_ptr->ds, NULL, 0);
+		break;
+	case ShaderObject::ShaderType::Hull:
+		d_ptr->devCtxt->HSSetShader(sObj->d_ptr->hs, NULL, 0);
+		break;
+	case ShaderObject::ShaderType::Geometry:
+		d_ptr->devCtxt->GSSetShader(sObj->d_ptr->gs, NULL, 0);
+		break;
+	case ShaderObject::ShaderType::Compute:
+		d_ptr->devCtxt->CSSetShader(sObj->d_ptr->cs, NULL, 0);
+		break;
+	}
+}
+
+Buffer* GraphicsObjectContext::CreateBuffer( Buffer::Usage usage, Buffer::Binding binding, Buffer::AccessType access, unsigned int size) {
+	
+	Buffer *b = new Buffer();
+
+	D3D11_BUFFER_DESC desc;
+	memset(&desc, 0, sizeof(desc));
+
+	switch (usage) {
+	case Buffer::Usage::Default:
+		desc.Usage = D3D11_USAGE_DEFAULT;
+		break;
+	case Buffer::Usage::Immutable:
+		desc.Usage = D3D11_USAGE_IMMUTABLE;
+		break;
+	case Buffer::Usage::Dynamic:
+		desc.Usage = D3D11_USAGE_DYNAMIC;
+		break;
+	case Buffer::Usage::Staging:
+		desc.Usage = D3D11_USAGE_STAGING;
+		break;
+	}
+
+	desc.BindFlags = (int)binding;
+	desc.CPUAccessFlags = (int)access;
+	desc.ByteWidth = size;
+
+	d_ptr->dev->CreateBuffer(&desc, NULL, &b->d_ptr->buffer);
+
+	return b;
+}
+
+void* GraphicsObjectContext::MapBuffer(Buffer *buf, Buffer::MapType mapType, bool async) {
+	D3D11_MAPPED_SUBRESOURCE subres; 
+	memset(&subres, 0, sizeof(subres));
+
+	d_ptr->devCtxt->Map(buf->d_ptr->buffer, 0, (D3D11_MAP)mapType, async ? D3D11_MAP_FLAG_DO_NOT_WAIT : 0, &subres);
+	return subres.pData;
+}
+
+void GraphicsObjectContext::CompileBufferLayout(BufferLayout *bufLayout, ShaderObject *vshader) {
+	auto arr = bufLayout->d_ptr->layouts.data();
+	d_ptr->dev->CreateInputLayout(arr, (unsigned int)bufLayout->d_ptr->layouts.size(), vshader->d_ptr->blob->GetBufferPointer(), vshader->d_ptr->blob->GetBufferSize(), &bufLayout->d_ptr->inputLayout);
 }
 
 void GraphicsObjectContext::SetRenderTargets(int num, RTV **rtvs) {

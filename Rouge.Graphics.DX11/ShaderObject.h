@@ -7,7 +7,7 @@
 #include <memory>
 
 namespace RougePP::Graphics {
-	class GRAPH_DllVisible ShaderObject
+	class ShaderObject
 	{
 	private:
 		struct ShaderObjectState;
@@ -24,8 +24,8 @@ namespace RougePP::Graphics {
 			Compute
 		};
 		
-		~ShaderObject();
-		ShaderType Type();
+		GRAPH_DllVisible ~ShaderObject();
+		GRAPH_DllVisible ShaderType Type();
 
 		friend class GraphicsObjectContext;
 	};

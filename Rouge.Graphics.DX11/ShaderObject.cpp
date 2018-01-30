@@ -13,6 +13,28 @@ ShaderObject::ShaderObject() : d_ptr(new ShaderObjectState())
 
 ShaderObject::~ShaderObject()
 {
+	d_ptr->blob->Release();
+
+	switch (d_ptr->sType) {
+	case ShaderType::Vertex:
+		d_ptr->vs->Release();
+		break;
+	case ShaderType::Fragment:
+		d_ptr->ps->Release();
+		break;
+	case ShaderType::Domain:
+		d_ptr->ds->Release();
+		break;
+	case ShaderType::Hull:
+		d_ptr->hs->Release();
+		break;
+	case ShaderType::Geometry:
+		d_ptr->gs->Release();
+		break;
+	case ShaderType::Compute:
+		d_ptr->cs->Release();
+		break;
+	}
 }
 
 ShaderObject::ShaderType ShaderObject::Type() {

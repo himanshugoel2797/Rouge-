@@ -4,6 +4,7 @@
 
 struct RougePP::Graphics::ShaderObject::ShaderObjectState {
 	ShaderType sType;
+	ID3DBlob *blob;
 	union {
 		ID3D11VertexShader *vs;
 		ID3D11PixelShader *ps;

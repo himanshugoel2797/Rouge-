@@ -149,23 +149,29 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="BufferLayout.h" />
     <ClInclude Include="Common.h" />
     <ClInclude Include="Context.h" />
     <ClInclude Include="DeferredContext.h" />
+    <ClInclude Include="Format.h" />
     <ClInclude Include="GraphicsObjectContext.h" />
     <ClInclude Include="RTV.h" />
     <ClInclude Include="ShaderObject.h" />
+    <ClInclude Include="State\BufferLayoutState.h" />
     <ClInclude Include="State\ContextState.h" />
     <ClInclude Include="State\DeferredContextState.h" />
     <ClInclude Include="State\GraphicsObjectContextState.h" />
     <ClInclude Include="State\RTVState.h" />
     <ClInclude Include="State\ShaderObjectState.h" />
     <ClInclude Include="State\Texture2DState.h" />
+    <ClInclude Include="State\BufferState.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
     <ClInclude Include="Texture2D.h" />
+    <ClInclude Include="Buffer.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="BufferLayout.cpp" />
     <ClCompile Include="DeferredContext.cpp" />
     <ClCompile Include="dllmain.cpp" />
     <ClCompile Include="Context.cpp" />
@@ -180,6 +186,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="Texture2D.cpp" />
+    <ClCompile Include="Buffer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Rouge.Math\Rouge.Math.vcxproj">
