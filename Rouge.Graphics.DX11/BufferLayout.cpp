@@ -9,6 +9,7 @@ using namespace RougePP::Graphics;
 
 BufferLayout::BufferLayout() : d_ptr(new BufferLayoutState())
 {
+	d_ptr->inputLayout = NULL;
 }
 
 void BufferLayout::AddLayout(std::string semantic, unsigned int semantic_idx, Format fmt, unsigned int input_slot, unsigned int byte_off, InputType inputType, unsigned int step_rate) 
@@ -30,4 +31,8 @@ void BufferLayout::AddLayout(std::string semantic, unsigned int semantic_idx, Fo
 
 BufferLayout::~BufferLayout()
 {
+	d_ptr->layouts.clear();
+
+	if (d_ptr->inputLayout != NULL)
+		d_ptr->inputLayout->Release();
 }
