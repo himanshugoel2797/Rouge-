@@ -1,6 +1,8 @@
 #include "stdafx.h"
 #include "GraphicsObjectContext.h"
 
+#include "ShaderBlob.h"
+
 #include "State\GraphicsObjectContextState.h"
 
 #include "State\ContextState.h"
@@ -49,7 +51,8 @@ void GraphicsObjectContext::ClearRTV(RTV *rtv, RougePP::Math::Vector4 col) {
 GRAPH_DllVisible ShaderObject * RougePP::Graphics::GraphicsObjectContext::CreateShader(std::wstring filename, ShaderObject::ShaderType sType, std::string fname)
 {
 	ShaderObject *obj = new ShaderObject();
-	ID3DBlob *blob;
+	ID3DBlob *blob = NULL;
+	ShaderBlob *rBlob = NULL;
 	obj->d_ptr->sType = sType;
 	int flags = 0;
 	std::string target;
@@ -81,30 +84,39 @@ GRAPH_DllVisible ShaderObject * RougePP::Graphics::GraphicsObjectContext::Create
 	flags = D3DCOMPILE_SKIP_VALIDATION;
 #endif
 
-	D3DCompileFromFile(filename.c_str(), NULL, NULL, fname.c_str(), target.c_str(), flags, 0, &blob, NULL);
+	auto extn = filename.find_last_of(L'.');
+	auto extn_s = filename.substr(extn, 10);
+
+	if (extn_s.compare(L".hlsl") == 0) {
+		D3DCompileFromFile(filename.c_str(), NULL, NULL, fname.c_str(), target.c_str(), flags, 0, &blob, NULL);
+		rBlob = new ShaderBlob(blob);
+	}
+	else if (extn_s.compare(L".cso") == 0) {
+		rBlob = new ShaderBlob(filename);
+	}
 
 	switch (sType) {
 	case ShaderObject::ShaderType::Vertex:
-		d_ptr->dev->CreateVertexShader(blob->GetBufferPointer(), blob->GetBufferSize(), NULL, &obj->d_ptr->vs);
+		d_ptr->dev->CreateVertexShader(rBlob->GetBufferPointer(), rBlob->GetBufferSize(), NULL, &obj->d_ptr->vs);
 		break;
 	case ShaderObject::ShaderType::Fragment:
-		d_ptr->dev->CreatePixelShader(blob->GetBufferPointer(), blob->GetBufferSize(), NULL, &obj->d_ptr->ps);
+		d_ptr->dev->CreatePixelShader(rBlob->GetBufferPointer(), rBlob->GetBufferSize(), NULL, &obj->d_ptr->ps);
 		break;
 	case ShaderObject::ShaderType::Domain:
-		d_ptr->dev->CreateDomainShader(blob->GetBufferPointer(), blob->GetBufferSize(), NULL, &obj->d_ptr->ds);
+		d_ptr->dev->CreateDomainShader(rBlob->GetBufferPointer(), rBlob->GetBufferSize(), NULL, &obj->d_ptr->ds);
 		break;
 	case ShaderObject::ShaderType::Hull:
-		d_ptr->dev->CreateHullShader(blob->GetBufferPointer(), blob->GetBufferSize(), NULL, &obj->d_ptr->hs);
+		d_ptr->dev->CreateHullShader(rBlob->GetBufferPointer(), rBlob->GetBufferSize(), NULL, &obj->d_ptr->hs);
 		break;
 	case ShaderObject::ShaderType::Geometry:
-		d_ptr->dev->CreateGeometryShader(blob->GetBufferPointer(), blob->GetBufferSize(), NULL, &obj->d_ptr->gs);
+		d_ptr->dev->CreateGeometryShader(rBlob->GetBufferPointer(), rBlob->GetBufferSize(), NULL, &obj->d_ptr->gs);
 		break;
 	case ShaderObject::ShaderType::Compute:
-		d_ptr->dev->CreateComputeShader(blob->GetBufferPointer(), blob->GetBufferSize(), NULL, &obj->d_ptr->cs);
+		d_ptr->dev->CreateComputeShader(rBlob->GetBufferPointer(), rBlob->GetBufferSize(), NULL, &obj->d_ptr->cs);
 		break;
 	}
 
-	obj->d_ptr->blob = blob;
+	obj->d_ptr->blob = rBlob;
 
 	return obj;
 }
@@ -132,8 +144,8 @@ void GraphicsObjectContext::SetShader(ShaderObject *sObj) {
 	}
 }
 
-Buffer* GraphicsObjectContext::CreateBuffer( Buffer::Usage usage, Buffer::Binding binding, Buffer::AccessType access, unsigned int size) {
-	
+Buffer* GraphicsObjectContext::CreateBuffer(Buffer::Usage usage, Buffer::Binding binding, Buffer::AccessType access, unsigned int size) {
+
 	Buffer *b = new Buffer();
 
 	D3D11_BUFFER_DESC desc;
@@ -164,7 +176,7 @@ Buffer* GraphicsObjectContext::CreateBuffer( Buffer::Usage usage, Buffer::Bindin
 }
 
 void* GraphicsObjectContext::MapBuffer(Buffer *buf, Buffer::MapType mapType, bool async) {
-	D3D11_MAPPED_SUBRESOURCE subres; 
+	D3D11_MAPPED_SUBRESOURCE subres;
 	auto res = d_ptr->devCtxt->Map(buf->d_ptr->buffer, 0, (D3D11_MAP)mapType, async ? D3D11_MAP_FLAG_DO_NOT_WAIT : 0, &subres);
 	return subres.pData;
 }

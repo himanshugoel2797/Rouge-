@@ -1,5 +1,5 @@
 #pragma once
-#include "../DeferredContext.h"
+#include "DeferredContext.h"
 
 #include <d3d11.h>
 

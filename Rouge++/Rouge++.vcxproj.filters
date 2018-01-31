@@ -62,6 +62,8 @@
     </Image>
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="BasicShader.hlsl" />
+    <FxCompile Include="BasicShader_p.hlsl" />
+    <FxCompile Include="PShader.hlsl" />
+    <FxCompile Include="VShader.hlsl" />
   </ItemGroup>
 </Project>

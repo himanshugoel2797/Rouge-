@@ -26,7 +26,7 @@ namespace RougePP::Graphics {
 
 		GRAPH_DllVisible BufferLayout();
 		GRAPH_DllVisible ~BufferLayout();
-		GRAPH_DllVisible void AddLayout(const std::string &semantic, unsigned int semantic_idx, Format fmt, unsigned int input_slot, unsigned int byte_off, InputType inputType, unsigned int step_rate);
+		GRAPH_DllVisible void AddLayout(const char *semantic, unsigned int semantic_idx, Format fmt, unsigned int input_slot, unsigned int byte_off, InputType inputType, unsigned int step_rate);
 
 		friend class GraphicsObjectContext;
 	};

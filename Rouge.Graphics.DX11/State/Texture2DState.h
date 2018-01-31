@@ -1,5 +1,5 @@
 #pragma once
-#include "../Texture2D.h"
+#include "Texture2D.h"
 
 #include <d3d11.h>
 

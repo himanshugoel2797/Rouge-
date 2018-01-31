@@ -13,7 +13,7 @@ ShaderObject::ShaderObject() : d_ptr(new ShaderObjectState())
 
 ShaderObject::~ShaderObject()
 {
-	d_ptr->blob->Release();
+	delete this->d_ptr->blob;
 
 	switch (d_ptr->sType) {
 	case ShaderType::Vertex:

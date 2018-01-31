@@ -90,7 +90,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;BUILD_DX11_BACKEND;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>C:\Users\Himanshu Goel\source\repos\Rouge++\Rouge.Math;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\Himanshu Goel\source\repos\Rouge++\Rouge.Graphics.DX11\inc;C:\Users\Himanshu Goel\source\repos\Rouge++\Rouge.Math;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
@@ -149,14 +149,15 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="BufferLayout.h" />
-    <ClInclude Include="Common.h" />
-    <ClInclude Include="Context.h" />
-    <ClInclude Include="DeferredContext.h" />
-    <ClInclude Include="Format.h" />
-    <ClInclude Include="GraphicsObjectContext.h" />
-    <ClInclude Include="RTV.h" />
-    <ClInclude Include="ShaderObject.h" />
+    <ClInclude Include="inc\BufferLayout.h" />
+    <ClInclude Include="inc\Common.h" />
+    <ClInclude Include="inc\Context.h" />
+    <ClInclude Include="inc\DeferredContext.h" />
+    <ClInclude Include="inc\Format.h" />
+    <ClInclude Include="inc\GraphicsObjectContext.h" />
+    <ClInclude Include="inc\RTV.h" />
+    <ClInclude Include="inc\ShaderObject.h" />
+    <ClInclude Include="ShaderBlob.h" />
     <ClInclude Include="State\BufferLayoutState.h" />
     <ClInclude Include="State\ContextState.h" />
     <ClInclude Include="State\DeferredContextState.h" />
@@ -167,8 +168,8 @@
     <ClInclude Include="State\BufferState.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
-    <ClInclude Include="Texture2D.h" />
-    <ClInclude Include="Buffer.h" />
+    <ClInclude Include="inc\Texture2D.h" />
+    <ClInclude Include="inc\Buffer.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="BufferLayout.cpp" />
@@ -178,6 +179,7 @@
     <ClCompile Include="GraphicsObjectContext.cpp" />
     <ClCompile Include="Rouge.Graphics.DX11.cpp" />
     <ClCompile Include="RTV.cpp" />
+    <ClCompile Include="ShaderBlob.cpp" />
     <ClCompile Include="ShaderObject.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>

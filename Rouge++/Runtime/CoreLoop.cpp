@@ -24,8 +24,8 @@ CoreLoop::CoreLoop(RougePP::Graphics::Context *ctxt, RougePP::Graphics::Deferred
 	gctxt->SetViewports(1, &Vector4(0, 0, 800, 600));
 	gctxt->SetRenderTargets(1, &bb_rtv);
 
-	vshader = gctxt->CreateShader(L"BasicShader.hlsl", ShaderObject::ShaderType::Vertex, "VShader");
-	fshader = gctxt->CreateShader(L"BasicShader.hlsl", ShaderObject::ShaderType::Fragment, "PShader");
+	vshader = gctxt->CreateShader(L"VShader.cso", ShaderObject::ShaderType::Vertex, "main");
+	fshader = gctxt->CreateShader(L"PShader.cso", ShaderObject::ShaderType::Fragment, "main");
 
 	vertices = gctxt->CreateBuffer(Buffer::Usage::Dynamic, Buffer::Binding::VertexBuffer, Buffer::AccessType::Write, 3 * 3 * sizeof(float));
 
@@ -39,8 +39,7 @@ CoreLoop::CoreLoop(RougePP::Graphics::Context *ctxt, RougePP::Graphics::Deferred
 	gctxt->SetShader(fshader);
 	
 	layout = new BufferLayout();
-	auto pos = std::string("POSITION");
-	layout->AddLayout(pos, 0, Format::R32_G32_B32_FLOAT, 0, 0, BufferLayout::InputType::PerVertex, 0);
+	layout->AddLayout(BufferLayout::POSITION, 0, Format::R32_G32_B32_FLOAT, 0, 0, BufferLayout::InputType::PerVertex, 0);
 	gctxt->CompileBufferLayout(layout, vshader);
 
 	unsigned int off = 0, stride = 12;

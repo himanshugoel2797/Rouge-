@@ -1,10 +1,11 @@
 #pragma once
 
 #include <d3d11.h>
+#include "ShaderBlob.h"
 
 struct RougePP::Graphics::ShaderObject::ShaderObjectState {
 	ShaderType sType;
-	ID3DBlob *blob;
+	ShaderBlob *blob;
 	union {
 		ID3D11VertexShader *vs;
 		ID3D11PixelShader *ps;

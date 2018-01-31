@@ -1,5 +1,5 @@
 #pragma once
-#include "../RTV.h"
+#include "RTV.h"
 
 #include <d3d11.h>
 
