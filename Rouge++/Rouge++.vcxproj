@@ -182,6 +182,12 @@
       <Project>{5a4cdfaa-f8e5-4088-989c-665340add574}</Project>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="BasicShader.hlsl">
+      <DeploymentContent>true</DeploymentContent>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </FxCompile>
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

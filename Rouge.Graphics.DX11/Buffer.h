@@ -28,8 +28,8 @@ namespace RougePP::Graphics {
 		};
 
 		enum class AccessType {
-			Read = 0x10000L,
-			Write = 0x20000L,
+			Write = 0x10000L,
+			Read = 0x20000L,
 		};
 
 		enum class MapType {

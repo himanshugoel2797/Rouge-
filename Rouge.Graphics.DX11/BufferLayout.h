@@ -19,9 +19,14 @@ namespace RougePP::Graphics {
 			PerInstance = 1,
 		};
 
+		static constexpr auto NORMAL = "NORMAL";
+		static constexpr auto POSITION = "POSITION";
+		static constexpr auto PSIZE = "PSIZE";
+		static constexpr auto TEXCOORD = "TEXCOORD";
+
 		GRAPH_DllVisible BufferLayout();
 		GRAPH_DllVisible ~BufferLayout();
-		GRAPH_DllVisible void AddLayout(std::string semantic, unsigned int semantic_idx, Format fmt, unsigned int input_slot, unsigned int byte_off, InputType inputType, unsigned int step_rate);
+		GRAPH_DllVisible void AddLayout(const std::string &semantic, unsigned int semantic_idx, Format fmt, unsigned int input_slot, unsigned int byte_off, InputType inputType, unsigned int step_rate);
 
 		friend class GraphicsObjectContext;
 	};

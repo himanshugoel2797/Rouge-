@@ -158,22 +158,39 @@ Buffer* GraphicsObjectContext::CreateBuffer( Buffer::Usage usage, Buffer::Bindin
 	desc.CPUAccessFlags = (int)access;
 	desc.ByteWidth = size;
 
-	d_ptr->dev->CreateBuffer(&desc, NULL, &b->d_ptr->buffer);
+	auto res = d_ptr->dev->CreateBuffer(&desc, NULL, &b->d_ptr->buffer);
 
 	return b;
 }
 
 void* GraphicsObjectContext::MapBuffer(Buffer *buf, Buffer::MapType mapType, bool async) {
 	D3D11_MAPPED_SUBRESOURCE subres; 
-	memset(&subres, 0, sizeof(subres));
-
-	d_ptr->devCtxt->Map(buf->d_ptr->buffer, 0, (D3D11_MAP)mapType, async ? D3D11_MAP_FLAG_DO_NOT_WAIT : 0, &subres);
+	auto res = d_ptr->devCtxt->Map(buf->d_ptr->buffer, 0, (D3D11_MAP)mapType, async ? D3D11_MAP_FLAG_DO_NOT_WAIT : 0, &subres);
 	return subres.pData;
+}
+
+void RougePP::Graphics::GraphicsObjectContext::UnmapBuffer(Buffer * buf, void * ptr)
+{
+	d_ptr->devCtxt->Unmap(buf->d_ptr->buffer, 0);
+}
+
+void RougePP::Graphics::GraphicsObjectContext::SetVertexBuffer(unsigned int slot, Buffer * buf, unsigned int *offset, unsigned int *stride)
+{
+	d_ptr->devCtxt->IASetVertexBuffers(slot, 1, &buf->d_ptr->buffer, stride, offset);
 }
 
 void GraphicsObjectContext::CompileBufferLayout(BufferLayout *bufLayout, ShaderObject *vshader) {
 	auto arr = bufLayout->d_ptr->layouts.data();
 	d_ptr->dev->CreateInputLayout(arr, (unsigned int)bufLayout->d_ptr->layouts.size(), vshader->d_ptr->blob->GetBufferPointer(), vshader->d_ptr->blob->GetBufferSize(), &bufLayout->d_ptr->inputLayout);
+}
+
+void RougePP::Graphics::GraphicsObjectContext::SetBufferLayout(BufferLayout * bufLayout)
+{
+	if (bufLayout->d_ptr->inputLayout == NULL) {
+		//TODO: Error
+	}
+
+	d_ptr->devCtxt->IASetInputLayout(bufLayout->d_ptr->inputLayout);
 }
 
 void GraphicsObjectContext::SetRenderTargets(int num, RTV **rtvs) {
@@ -202,4 +219,10 @@ void RougePP::Graphics::GraphicsObjectContext::SetViewports(int num, RougePP::Ma
 	}
 	d_ptr->devCtxt->RSSetViewports(num, vprt);
 	delete[] vprt;
+}
+
+void RougePP::Graphics::GraphicsObjectContext::Draw(int count, int start)
+{
+	d_ptr->devCtxt->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	d_ptr->devCtxt->Draw(count, start);
 }

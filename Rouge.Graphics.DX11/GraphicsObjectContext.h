@@ -35,10 +35,15 @@ namespace RougePP::Graphics {
 
 		GRAPH_DllVisible Buffer* CreateBuffer(Buffer::Usage usage, Buffer::Binding binding, Buffer::AccessType access, unsigned int size);
 		GRAPH_DllVisible void* MapBuffer(Buffer *buf, Buffer::MapType mapType, bool async);
+		GRAPH_DllVisible void UnmapBuffer(Buffer *buf, void *ptr);
+		GRAPH_DllVisible void SetVertexBuffer(unsigned int slot, Buffer * buf, unsigned int *offset, unsigned int *stride);
 
 		GRAPH_DllVisible void CompileBufferLayout(BufferLayout *bufLayout, ShaderObject *vshader);
+		GRAPH_DllVisible void SetBufferLayout(BufferLayout *bufLayout);
 
 		GRAPH_DllVisible void SetRenderTargets(int num, RTV **rtvs);
 		GRAPH_DllVisible void SetViewports(int num, RougePP::Math::Vector4 *vp);
+
+		GRAPH_DllVisible void Draw(int count, int start);
 	};
 }
