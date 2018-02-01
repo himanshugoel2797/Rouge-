@@ -27,9 +27,9 @@ CoreLoop::CoreLoop(RougePP::Graphics::Context *ctxt, RougePP::Graphics::Deferred
 	vshader = gctxt->CreateShader(L"VShader.cso", ShaderObject::ShaderType::Vertex, "main");
 	fshader = gctxt->CreateShader(L"PShader.cso", ShaderObject::ShaderType::Fragment, "main");
 
-	vertices = gctxt->CreateBuffer(Buffer::Usage::Dynamic, Buffer::Binding::VertexBuffer, Buffer::AccessType::Write, 3 * 3 * sizeof(float));
+	vertices = gctxt->CreateBuffer(Usage::Dynamic, Binding::VertexBuffer, AccessType::Write, 3 * 3 * sizeof(float));
 
-	float* verts = (float*)gctxt->MapBuffer(vertices, Buffer::MapType::WriteDiscard, false);
+	float* verts = (float*)gctxt->MapBuffer(vertices, MapType::WriteDiscard, false);
 	verts[0] = 0; verts[1] = 0.5f; verts[2] = 0;
 	verts[3] = 0.45f; verts[4] = -0.5f; verts[5] = 0;
 	verts[6] = -0.45f; verts[7] = -0.5f; verts[8] = 0;

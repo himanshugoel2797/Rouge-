@@ -17,9 +17,15 @@ Texture2D* Texture2D::BackBuffer(Context * ctxt)
 
 Texture2D::Texture2D() : d_ptr(new Texture2DState())
 {
+	d_ptr->srv = NULL;
+	d_ptr->tex = NULL;
 }
 
 Texture2D::~Texture2D()
 {
-	d_ptr->tex->Release();
+	if (d_ptr->tex != NULL)
+		d_ptr->tex->Release();
+
+	if (d_ptr->srv != NULL)
+		d_ptr->srv->Release();
 }

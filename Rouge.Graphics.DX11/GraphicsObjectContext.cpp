@@ -13,6 +13,8 @@
 #include "State\ShaderObjectState.h"
 #include "State\BufferLayoutState.h"
 
+#include "WICTextureLoader.h"
+
 #include <d3d11.h>
 #include <D3DCompiler.h>
 
@@ -33,6 +35,38 @@ GraphicsObjectContext::GraphicsObjectContext(Context *ctxt, DeferredContext *dct
 
 GraphicsObjectContext::~GraphicsObjectContext()
 {
+}
+
+Texture2D* GraphicsObjectContext::CreateTexture2D(int w, int h, int mips, Format fmt, Binding binding, Usage use, AccessType access) {
+	Texture2D *tex = new Texture2D();
+
+	D3D11_TEXTURE2D_DESC tex2d_desc;
+	tex2d_desc.Width = w;
+	tex2d_desc.Height = h;
+	tex2d_desc.MipLevels = mips;
+	tex2d_desc.Format = (DXGI_FORMAT)fmt;
+	tex2d_desc.SampleDesc.Count = 1;
+	tex2d_desc.Usage = (D3D11_USAGE)use;
+	tex2d_desc.BindFlags = (unsigned int)binding;
+	tex2d_desc.CPUAccessFlags = (unsigned int)access;
+	tex2d_desc.MiscFlags = 0;
+
+	d_ptr->dev->CreateTexture2D(&tex2d_desc, NULL, &tex->d_ptr->tex);
+
+	return tex;
+}
+
+Texture2D* GraphicsObjectContext::LoadTexture2D(std::wstring file) {
+	Texture2D *tex = new Texture2D();
+
+	auto res = CreateWICTextureFromFile(d_ptr->dev,
+		d_ptr->devCtxt,
+		file.c_str(),
+		&tex->d_ptr->tex,
+		&tex->d_ptr->srv
+	);
+
+	return tex;
 }
 
 RTV* GraphicsObjectContext::CreateRTV(Texture2D *tex) {
@@ -144,7 +178,7 @@ void GraphicsObjectContext::SetShader(ShaderObject *sObj) {
 	}
 }
 
-Buffer* GraphicsObjectContext::CreateBuffer(Buffer::Usage usage, Buffer::Binding binding, Buffer::AccessType access, unsigned int size) {
+Buffer* GraphicsObjectContext::CreateBuffer(Usage usage, Binding binding, AccessType access, unsigned int size) {
 
 	Buffer *b = new Buffer();
 
@@ -152,16 +186,16 @@ Buffer* GraphicsObjectContext::CreateBuffer(Buffer::Usage usage, Buffer::Binding
 	memset(&desc, 0, sizeof(desc));
 
 	switch (usage) {
-	case Buffer::Usage::Default:
+	case Usage::Default:
 		desc.Usage = D3D11_USAGE_DEFAULT;
 		break;
-	case Buffer::Usage::Immutable:
+	case Usage::Immutable:
 		desc.Usage = D3D11_USAGE_IMMUTABLE;
 		break;
-	case Buffer::Usage::Dynamic:
+	case Usage::Dynamic:
 		desc.Usage = D3D11_USAGE_DYNAMIC;
 		break;
-	case Buffer::Usage::Staging:
+	case Usage::Staging:
 		desc.Usage = D3D11_USAGE_STAGING;
 		break;
 	}
@@ -175,7 +209,7 @@ Buffer* GraphicsObjectContext::CreateBuffer(Buffer::Usage usage, Buffer::Binding
 	return b;
 }
 
-void* GraphicsObjectContext::MapBuffer(Buffer *buf, Buffer::MapType mapType, bool async) {
+void* GraphicsObjectContext::MapBuffer(Buffer *buf, MapType mapType, bool async) {
 	D3D11_MAPPED_SUBRESOURCE subres;
 	auto res = d_ptr->devCtxt->Map(buf->d_ptr->buffer, 0, (D3D11_MAP)mapType, async ? D3D11_MAP_FLAG_DO_NOT_WAIT : 0, &subres);
 	return subres.pData;

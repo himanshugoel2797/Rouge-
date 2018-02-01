@@ -5,4 +5,5 @@
 
 struct RougePP::Graphics::Texture2D::Texture2DState {
 	ID3D11Texture2D * tex;
+	ID3D11ShaderResourceView *srv;
 };

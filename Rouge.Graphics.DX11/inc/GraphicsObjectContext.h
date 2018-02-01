@@ -2,6 +2,7 @@
 
 #include "Common.h"
 
+#include "Enums.h"
 #include "Context.h"
 #include "DeferredContext.h"
 #include "RTV.h"
@@ -11,6 +12,7 @@
 #include "BufferLayout.h"
 #include "Vector\Vector4.h"
 
+#include <string>
 #include <memory>
 
 namespace RougePP::Graphics {
@@ -27,14 +29,17 @@ namespace RougePP::Graphics {
 
 		GRAPH_DllVisible ~GraphicsObjectContext();
 		
+		GRAPH_DllVisible Texture2D* LoadTexture2D(std::wstring file);
+		GRAPH_DllVisible Texture2D* CreateTexture2D(int w, int h, int mips, Format fmt, Binding binding, Usage use, AccessType access);
+
 		GRAPH_DllVisible RTV* CreateRTV(Texture2D *tex);
 		GRAPH_DllVisible void ClearRTV(RTV *rtv, RougePP::Math::Vector4 col);
 
 		GRAPH_DllVisible ShaderObject* CreateShader(std::wstring filename, ShaderObject::ShaderType sType, std::string fname);
 		GRAPH_DllVisible void SetShader(ShaderObject *sObj);
 
-		GRAPH_DllVisible Buffer* CreateBuffer(Buffer::Usage usage, Buffer::Binding binding, Buffer::AccessType access, unsigned int size);
-		GRAPH_DllVisible void* MapBuffer(Buffer *buf, Buffer::MapType mapType, bool async);
+		GRAPH_DllVisible Buffer* CreateBuffer(Usage usage, Binding binding, AccessType access, unsigned int size);
+		GRAPH_DllVisible void* MapBuffer(Buffer *buf, MapType mapType, bool async);
 		GRAPH_DllVisible void UnmapBuffer(Buffer *buf, void *ptr);
 		GRAPH_DllVisible void SetVertexBuffer(unsigned int slot, Buffer * buf, unsigned int *offset, unsigned int *stride);
 

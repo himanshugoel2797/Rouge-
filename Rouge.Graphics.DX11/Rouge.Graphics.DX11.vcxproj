@@ -153,6 +153,7 @@
     <ClInclude Include="inc\Common.h" />
     <ClInclude Include="inc\Context.h" />
     <ClInclude Include="inc\DeferredContext.h" />
+    <ClInclude Include="inc\Enums.h" />
     <ClInclude Include="inc\Format.h" />
     <ClInclude Include="inc\GraphicsObjectContext.h" />
     <ClInclude Include="inc\RTV.h" />
@@ -170,6 +171,7 @@
     <ClInclude Include="targetver.h" />
     <ClInclude Include="inc\Texture2D.h" />
     <ClInclude Include="inc\Buffer.h" />
+    <ClInclude Include="WICTextureLoader.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="BufferLayout.cpp" />
@@ -189,6 +191,7 @@
     </ClCompile>
     <ClCompile Include="Texture2D.cpp" />
     <ClCompile Include="Buffer.cpp" />
+    <ClCompile Include="WICTextureLoader.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Rouge.Math\Rouge.Math.vcxproj">
