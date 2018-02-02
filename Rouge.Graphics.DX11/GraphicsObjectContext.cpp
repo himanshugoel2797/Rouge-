@@ -41,6 +41,8 @@ Texture2D* GraphicsObjectContext::CreateTexture2D(int w, int h, int mips, Format
 	Texture2D *tex = new Texture2D();
 
 	D3D11_TEXTURE2D_DESC tex2d_desc;
+	memset(&tex2d_desc, 0, sizeof(tex2d_desc));
+
 	tex2d_desc.Width = w;
 	tex2d_desc.Height = h;
 	tex2d_desc.MipLevels = mips;

@@ -3,6 +3,7 @@
 #include "State/ContextState.h"
 
 #include <d3d11.h>
+#include <amd_ags.h>
 
 using namespace RougePP::Graphics;
 
@@ -15,12 +16,12 @@ Context::~Context()
 {
 }
 
-bool Context::IsFullscreen() 
+bool Context::IsFullscreen()
 {
 	return this->d_ptr->isFullscreen;
 }
 
-bool Context::IsDebug() 
+bool Context::IsDebug()
 {
 	return this->d_ptr->isDebug;
 }
@@ -35,7 +36,7 @@ void Context::SetDebug(bool enable)
 	this->d_ptr->isDebug = enable;
 }
 
-int Context::InitCtxt(HWND hWnd) 
+int Context::InitCtxt(HWND hWnd, std::wstring app_name, int app_ver, int eng_ver)
 {
 	DXGI_SWAP_CHAIN_DESC scd;
 
@@ -51,13 +52,47 @@ int Context::InitCtxt(HWND hWnd)
 
 	D3D_FEATURE_LEVEL featureLevels[] = { D3D_FEATURE_LEVEL_11_1 };
 	D3D_FEATURE_LEVEL selFeatureLevel;
-	auto res = D3D11CreateDeviceAndSwapChain(NULL, D3D_DRIVER_TYPE_HARDWARE, NULL, (this->d_ptr->isDebug ? D3D11_CREATE_DEVICE_DEBUG : NULL), featureLevels, 1, D3D11_SDK_VERSION, &scd, &d_ptr->swapchain, &d_ptr->dev, &selFeatureLevel, &d_ptr->devCtxt);
 
-	if (res == S_OK)
-		return 0;
+	AGSContext *agsCtxt;
+	if (agsInit(&agsCtxt, NULL, NULL) == AGS_SUCCESS) {
+		AGSDX11DeviceCreationParams creationParams;
+		AGSDX11ExtensionParams extParams;
+		AGSDX11ReturnedParams retParams;
 
-	//TODO: Error!
-	return res;
+		memset(&creationParams, 0, sizeof(creationParams));
+		creationParams.pAdapter = NULL;
+		creationParams.DriverType = D3D_DRIVER_TYPE_HARDWARE;
+		creationParams.Flags = (this->d_ptr->isDebug ? D3D11_CREATE_DEVICE_DEBUG : NULL);
+		creationParams.pFeatureLevels = featureLevels;
+		creationParams.FeatureLevels = 1;
+		creationParams.SDKVersion = D3D11_SDK_VERSION;
+		creationParams.pSwapChainDesc = &scd;
+
+		memset(&extParams, 0, sizeof(extParams));
+		extParams.uavSlot = 7;
+		extParams.appVersion = app_ver;
+		extParams.pAppName = app_name.c_str();
+		extParams.engineVersion = eng_ver;
+		extParams.pEngineName = L"Rouge++ PreAlpha";
+
+		if (agsDriverExtensionsDX11_CreateDevice(agsCtxt, &creationParams, &extParams, &retParams) == AGS_SUCCESS) {
+			d_ptr->swapchain = retParams.pSwapChain;
+			d_ptr->dev = retParams.pDevice;
+			d_ptr->devCtxt = retParams.pImmediateContext;
+			selFeatureLevel = retParams.FeatureLevel;
+
+			return 0;
+		}
+
+		return -1;
+	}
+	else {
+		auto res = D3D11CreateDeviceAndSwapChain(NULL, D3D_DRIVER_TYPE_HARDWARE, NULL, (this->d_ptr->isDebug ? D3D11_CREATE_DEVICE_DEBUG : NULL), featureLevels, 1, D3D11_SDK_VERSION, &scd, &d_ptr->swapchain, &d_ptr->dev, &selFeatureLevel, &d_ptr->devCtxt);
+		if (res == S_OK)
+			return 0;
+		//TODO: Error!
+		return res;
+	}
 }
 
 int Context::Release()

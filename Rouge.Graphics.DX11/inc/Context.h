@@ -2,6 +2,7 @@
 
 #include "Common.h"
 
+#include <string>
 #include <memory>
 #include <windows.h>
 
@@ -23,7 +24,7 @@ namespace RougePP::Graphics {
 		GRAPH_DllVisible void SetFullscreen(bool enable);
 		GRAPH_DllVisible void SetDebug(bool enable);
 
-		GRAPH_DllVisible int InitCtxt(HWND hWnd);
+		GRAPH_DllVisible int InitCtxt(HWND hWnd, std::wstring app_name, int app_ver, int eng_ver);
 		GRAPH_DllVisible int Release();
 
 		GRAPH_DllVisible void Present();
